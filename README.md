@@ -1,19 +1,10 @@
 # Adventure Awaits - Travel Website
 
-A modern, responsive travel website built with HTML, CSS, and JavaScript. This project showcases frontend development skills with interactive features, clean code structure, and mobile-first design principles.
-
-## 🌟 Live Demo
-
-[View Live Website](#) *(Add your GitHub Pages or deployment URL here)*
+A responsive travel website built with HTML, CSS, and JavaScript.
 
 ## 📋 Project Overview
 
 Adventure Awaits is a full-featured travel website that demonstrates modern web development practices. The website includes destination browsing, package selection, booking functionality, and user authentication simulation.
-
-### 🎯 Purpose
-- **Portfolio Project**: Designed to showcase frontend development skills
-- **Interview Ready**: Clean, well-commented code that's easy to explain
-- **Modern Design**: Responsive layout with smooth animations and interactions
 
 ## ✨ Features
 
@@ -201,30 +192,6 @@ function isValidEmail(email) {
 - **Spacing**: Consistent padding and margins
 - **Visual Hierarchy**: Clear content organization
 
-## 📱 Browser Support
-
-- ✅ Chrome (90+)
-- ✅ Firefox (85+)
-- ✅ Safari (14+)
-- ✅ Edge (90+)
-
-## 🚀 Deployment Options
-
-### GitHub Pages
-1. Upload files to GitHub repository
-2. Go to repository Settings > Pages
-3. Select source branch (main/master)
-4. Access via `https://yourusername.github.io/repository-name`
-
-### Netlify
-1. Drag and drop project folder to Netlify
-2. Get instant live URL
-3. Automatic deployments with Git integration
-
-### Vercel
-1. Import project from GitHub
-2. Automatic deployment and optimization
-3. Custom domain support
 
 ## 🔄 Future Enhancements
 
@@ -236,11 +203,6 @@ function isValidEmail(email) {
 - **API Integration**: Real travel data from APIs
 - **Advanced Search**: Filter and search functionality
 
-### Performance Optimizations
-- Image optimization and lazy loading
-- CSS and JavaScript minification
-- Service worker for offline functionality
-- Progressive Web App (PWA) features
 
 ## 📈 Learning Outcomes
 
@@ -257,32 +219,12 @@ function isValidEmail(email) {
 - **Documentation**: Comprehensive README and code comments
 - **Testing**: Cross-browser compatibility testing
 
-## 📞 Contact
-
-**Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Your LinkedIn](https://linkedin.com/in/yourprofile)
-- Email: your.email@example.com
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
----
-
-**Built with ❤️ for learning and portfolio purposes**
-
 ### 📸 Screenshots
 
-![Homepage](screenshots/homepage.png)
+![Homepage](<img width="958" height="500" alt="image" src="https://github.com/user-attachments/assets/158228ed-3a51-4881-9d9b-08f5995fc582" />)
 *Homepage with hero section and navigation*
 
-![Mobile View](screenshots/mobile.png)
-*Responsive mobile design*
-
-![Booking Modal](screenshots/booking-modal.png)
+![Booking Modal](<img width="948" height="503" alt="image" src="https://github.com/user-attachments/assets/c44b69c7-8182-43ba-88ba-0aad40cf81dc" />)
 *Interactive booking modal with form validation*
 
 ---
-
-*This project is designed for educational and portfolio purposes. Feel free to use it as inspiration for your own projects!*
