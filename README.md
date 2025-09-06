@@ -79,40 +79,8 @@ adventure-awaits-travel-website/
 - Text editor (VS Code, Sublime Text, etc.)
 - Basic knowledge of HTML, CSS, and JavaScript
 
-### Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/adventure-awaits-travel-website.git
-   ```
-
-2. **Navigate to project directory**
-   ```bash
-   cd adventure-awaits-travel-website
-   ```
-
-3. **Open in browser**
-   - Open `index.html` in your preferred web browser
-   - Or use a local server for development
-
-### Development Server (Optional)
-
-For development, you can use a local server:
-
-```bash
-# Using Python (if installed)
-python -m http.server 8000
-
-# Using Node.js (if installed)
-npx serve .
-
-# Using PHP (if installed)
-php -S localhost:8000
-```
-
-Then visit `http://localhost:8000`
-
-## 🎯 Key Features for Interviews
+## 🎯 Key Features 
 
 ### 1. **Clean Code Structure**
 - Well-organized and commented code
