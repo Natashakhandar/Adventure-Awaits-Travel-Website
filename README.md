@@ -221,10 +221,10 @@ function isValidEmail(email) {
 
 ### 📸 Screenshots
 
-![Homepage](<img width="958" height="500" alt="image" src="https://github.com/user-attachments/assets/158228ed-3a51-4881-9d9b-08f5995fc582" />)
+![Homepage] (<img width="958" height="500" alt="image" src="https://github.com/user-attachments/assets/158228ed-3a51-4881-9d9b-08f5995fc582" />)
 *Homepage with hero section and navigation*
 
-![Booking Modal](<img width="948" height="503" alt="image" src="https://github.com/user-attachments/assets/c44b69c7-8182-43ba-88ba-0aad40cf81dc" />)
+![Booking Modal] (<img width="948" height="503" alt="image" src="https://github.com/user-attachments/assets/c44b69c7-8182-43ba-88ba-0aad40cf81dc" />)
 *Interactive booking modal with form validation*
 
 ---
