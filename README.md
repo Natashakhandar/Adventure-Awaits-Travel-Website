@@ -2,19 +2,19 @@
 
 A responsive travel website built with HTML, CSS, and JavaScript.
 
-## 📋 Project Overview
+##  Project Overview
 
 Adventure Awaits is a full-featured travel website that demonstrates modern web development practices. The website includes destination browsing, package selection, booking functionality, and user authentication simulation.
 
-## ✨ Features
+##  Features
 
-### 🎨 Design & UI
+###  Design & UI
 - **Responsive Design**: Mobile-first approach, works on all devices
 - **Modern Animations**: Smooth transitions and scroll-based animations
 - **Clean Typography**: Easy-to-read fonts and proper spacing
 - **Color Scheme**: Professional blue and orange color palette
 
-### 🔧 Functionality
+###  Functionality
 - **Navigation**: Smooth scrolling navigation with mobile hamburger menu
 - **Hero Section**: Eye-catching banner with call-to-action
 - **Destinations**: Interactive cards with hover effects
@@ -23,14 +23,14 @@ Adventure Awaits is a full-featured travel website that demonstrates modern web 
 - **Modals**: Login and booking modals with form validation
 - **Notifications**: Toast-style notifications for user feedback
 
-### 📱 Interactive Elements
+###  Interactive Elements
 - **Booking System**: Multi-step booking process with form validation
 - **Login Simulation**: Simulated user authentication
 - **Mobile Menu**: Responsive navigation for mobile devices
 - **Form Validation**: Client-side validation for all forms
 - **Scroll Effects**: Elements animate as they come into view
 
-## 🚀 Technologies Used
+##  Technologies Used
 
 ### Frontend Stack
 - **HTML5**: Semantic markup and accessibility features
@@ -41,7 +41,7 @@ Adventure Awaits is a full-featured travel website that demonstrates modern web 
 - **Font Awesome**: Icons for better visual appeal
 - **Unsplash Images**: High-quality placeholder images
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 adventure-awaits-travel-website/
@@ -52,7 +52,7 @@ adventure-awaits-travel-website/
 └── screenshots/        # Project screenshots (optional)
 ```
 
-### 📄 File Breakdown
+###  File Breakdown
 
 #### `index.html` (Structure)
 - Semantic HTML5 structure
@@ -72,7 +72,7 @@ adventure-awaits-travel-website/
 - Form validation and user feedback
 - Smooth scrolling and animations
 
-## 🛠️ Setup Instructions
+##  Setup Instructions
 
 ### Prerequisites
 - Web browser (Chrome, Firefox, Safari, Edge)
@@ -80,7 +80,7 @@ adventure-awaits-travel-website/
 - Basic knowledge of HTML, CSS, and JavaScript
 
 
-## 🎯 Key Features 
+##  Key Features 
 
 ### 1. **Clean Code Structure**
 - Well-organized and commented code
@@ -112,7 +112,7 @@ adventure-awaits-travel-website/
 - Form validation
 - Error handling
 
-## 🔍 Code Highlights
+##  Code Highlights
 
 ### CSS Grid Layout
 ```css
@@ -142,7 +142,7 @@ function isValidEmail(email) {
 }
 ```
 
-## 🎨 Design Decisions
+##  Design Decisions
 
 ### Color Palette
 - **Primary Blue**: #2c5aa0 (Trust, professional)
@@ -161,7 +161,7 @@ function isValidEmail(email) {
 - **Visual Hierarchy**: Clear content organization
 
 
-## 🔄 Future Enhancements
+##  Future Enhancements
 
 ### Version 2.0 Ideas
 - **Backend Integration**: Real booking system with database
@@ -172,7 +172,7 @@ function isValidEmail(email) {
 - **Advanced Search**: Filter and search functionality
 
 
-## 📈 Learning Outcomes
+##  Learning Outcomes
 
 ### Technical Skills Demonstrated
 - **HTML5**: Semantic markup, accessibility
@@ -187,7 +187,7 @@ function isValidEmail(email) {
 - **Documentation**: Comprehensive README and code comments
 - **Testing**: Cross-browser compatibility testing
 
-### 📸 Screenshots
+###  Screenshots
 
 ![Homepage] (<img width="958" height="500" alt="image" src="https://github.com/user-attachments/assets/158228ed-3a51-4881-9d9b-08f5995fc582" />)
 *Homepage with hero section and navigation*
@@ -196,3 +196,7 @@ function isValidEmail(email) {
 *Interactive booking modal with form validation*
 
 ---
+
+### Deployment Link
+
+https://dztagn79x67pd.cloudfront.net/
