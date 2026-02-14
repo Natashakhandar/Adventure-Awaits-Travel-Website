@@ -11,11 +11,11 @@ app.use(express.json());
 
 /* ================= DATABASE CONNECTION ================= */
 const db = mysql.createConnection({
-  host: "127.0.0.1",
-  user: "root",
-  password: "",
-  database: "adventure_db",
-  port: 3306
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT || 3306
 });
 
 /* ================= CONNECT DATABASE ================= */
@@ -141,7 +141,7 @@ app.post("/api/contact", (req, res) => {
 });
 
 /* ================= SERVER START ================= */
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Backend running on http://localhost:${PORT}`);
 });
