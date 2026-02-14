@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
-const mysql = require("mysql2");
 const cors = require("cors");
+const { Pool } = require("pg");
 
 const app = express();
 
@@ -9,58 +9,24 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-/* ================= DATABASE CONNECTION ================= */
-const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT || 3306
+/* ================= DATABASE ================= */
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
 });
 
-/* ================= CONNECT DATABASE ================= */
-db.connect((err) => {
-  if (err) {
-    console.error("❌ Database Connection Failed:", err);
-    return;
+/* ================= HEALTH CHECK ================= */
+app.get("/", async (req, res) => {
+  try {
+    await pool.query("SELECT 1");
+    res.send("🚀 API running & DB connected");
+  } catch (err) {
+    res.status(500).send("❌ DB connection failed");
   }
-
-  console.log("✅ Connected to MySQL Server (XAMPP)");
-  console.log("📦 Using Database: adventure_db");
-
-  // Auto create tables if missing (SAFE)
-  db.query(`
-    CREATE TABLE IF NOT EXISTS bookings (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      destination VARCHAR(255),
-      full_name VARCHAR(255),
-      email VARCHAR(255),
-      phone VARCHAR(20),
-      travel_date DATE,
-      guests INT,
-      special_requirements TEXT,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
-
-  db.query(`
-    CREATE TABLE IF NOT EXISTS contact_messages (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      name VARCHAR(255),
-      email VARCHAR(255),
-      message TEXT,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
 });
 
-/* ================= TEST ROUTE ================= */
-app.get("/", (req, res) => {
-  res.send("🚀 Backend is running & DB connected!");
-});
-
-/* ================= BOOKING API ================= */
-app.post("/api/book", (req, res) => {
+/* ================= BOOKING ================= */
+app.post("/api/book", async (req, res) => {
   const {
     destination,
     fullName,
@@ -72,76 +38,54 @@ app.post("/api/book", (req, res) => {
   } = req.body;
 
   if (!destination || !fullName || !email || !phone || !travelDate || !guests) {
-    return res.status(400).json({
-      message: "❌ Missing required booking fields"
-    });
+    return res.status(400).json({ message: "Missing fields" });
   }
 
-  const sql = `
-    INSERT INTO bookings
-    (destination, full_name, email, phone, travel_date, guests, special_requirements)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-  `;
+  try {
+    await pool.query(
+      `INSERT INTO bookings
+       (destination, full_name, email, phone, travel_date, guests, special_requirements)
+       VALUES ($1,$2,$3,$4,$5,$6,$7)`,
+      [
+        destination,
+        fullName,
+        email,
+        phone,
+        travelDate,
+        guests,
+        specialRequirements || ""
+      ]
+    );
 
-  db.query(
-    sql,
-    [
-      destination,
-      fullName,
-      email,
-      phone,
-      travelDate,
-      guests,
-      specialRequirements || ""
-    ],
-    (err, result) => {
-      if (err) {
-        console.error("❌ Booking Insert Error:", err);
-        return res.status(500).json({
-          message: "Booking failed (DB error)"
-        });
-      }
-
-      console.log("📌 Booking Saved:", fullName, destination);
-      res.json({
-        message: "✅ Booking saved successfully!"
-      });
-    }
-  );
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false });
+  }
 });
 
-/* ================= CONTACT API ================= */
-app.post("/api/contact", (req, res) => {
+/* ================= CONTACT ================= */
+app.post("/api/contact", async (req, res) => {
   const { name, email, message } = req.body;
 
   if (!name || !email || !message) {
-    return res.status(400).json({
-      message: "❌ All contact fields are required"
-    });
+    return res.status(400).json({ message: "Missing fields" });
   }
 
-  const sql = `
-    INSERT INTO contact_messages (name, email, message)
-    VALUES (?, ?, ?)
-  `;
+  try {
+    await pool.query(
+      `INSERT INTO contact_messages (name, email, message)
+       VALUES ($1,$2,$3)`,
+      [name, email, message]
+    );
 
-  db.query(sql, [name, email, message], (err, result) => {
-    if (err) {
-      console.error("❌ Contact Insert Error:", err);
-      return res.status(500).json({
-        message: "Message failed (DB error)"
-      });
-    }
-
-    console.log("📩 Contact Saved:", name);
-    res.json({
-      message: "✅ Message saved successfully!"
-    });
-  });
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false });
+  }
 });
 
-/* ================= SERVER START ================= */
+/* ================= START SERVER ================= */
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Backend running on http://localhost:${PORT}`);
-});
+app.listen(PORT, () => console.log(`🚀 Server running on ${PORT}`));
