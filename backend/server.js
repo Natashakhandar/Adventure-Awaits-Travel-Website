@@ -1,91 +1,49 @@
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
-const { Pool } = require("pg");
+const SUPABASE_URL = "https://nwttotkdkxtlovioftyv.supabase.co";
 
-const app = express();
-
-/* ================= MIDDLEWARE ================= */
-app.use(cors());
-app.use(express.json());
-
-/* ================= DATABASE ================= */
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
-});
-
-/* ================= HEALTH CHECK ================= */
-app.get("/", async (req, res) => {
-  try {
-    await pool.query("SELECT 1");
-    res.send("🚀 API running & DB connected");
-  } catch (err) {
-    res.status(500).send("❌ DB connection failed");
-  }
-});
+const SUPABASE_KEY = "PASTE_YOUR_LONG_ANON_KEY_HERE";
 
 /* ================= BOOKING ================= */
-app.post("/api/book", async (req, res) => {
-  const {
-    destination,
-    fullName,
-    email,
-    phone,
-    travelDate,
-    guests,
-    specialRequirements
-  } = req.body;
+async function submitBooking(data) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/bookings`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": SUPABASE_KEY,
+      "Authorization": `Bearer ${SUPABASE_KEY}`,
+      "Prefer": "return=minimal"
+    },
+    body: JSON.stringify({
+      destination: data.destination,
+      full_name: data.fullName,
+      email: data.email,
+      phone: data.phone,
+      travel_date: data.travelDate,
+      guests: data.guests,
+      special_requirements: data.specialRequirements
+    })
+  });
 
-  if (!destination || !fullName || !email || !phone || !travelDate || !guests) {
-    return res.status(400).json({ message: "Missing fields" });
-  }
-
-  try {
-    await pool.query(
-      `INSERT INTO bookings
-       (destination, full_name, email, phone, travel_date, guests, special_requirements)
-       VALUES ($1,$2,$3,$4,$5,$6,$7)`,
-      [
-        destination,
-        fullName,
-        email,
-        phone,
-        travelDate,
-        guests,
-        specialRequirements || ""
-      ]
-    );
-
-    res.json({ success: true });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false });
-  }
-});
+  if (res.ok) alert("✅ Booking saved!");
+  else alert("❌ Booking failed");
+}
 
 /* ================= CONTACT ================= */
-app.post("/api/contact", async (req, res) => {
-  const { name, email, message } = req.body;
+async function submitContact(data) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/contact_messages`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": SUPABASE_KEY,
+      "Authorization": `Bearer ${SUPABASE_KEY}`,
+      "Prefer": "return=minimal"
+    },
+    body: JSON.stringify({
+      name: data.name,
+      email: data.email,
+      message: data.message
+    })
+  });
 
-  if (!name || !email || !message) {
-    return res.status(400).json({ message: "Missing fields" });
-  }
-
-  try {
-    await pool.query(
-      `INSERT INTO contact_messages (name, email, message)
-       VALUES ($1,$2,$3)`,
-      [name, email, message]
-    );
-
-    res.json({ success: true });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false });
-  }
-});
-
-/* ================= START SERVER ================= */
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on ${PORT}`));
+  if (res.ok) alert("✅ Message sent!");
+  else alert("❌ Message failed");
+}
