@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
+
 <body>
     <!-- Navigation -->
     <nav class="navbar">
@@ -45,7 +47,8 @@
             <h2>Popular Destinations</h2>
             <div class="destination-grid">
                 <div class="destination-card">
-                    <img src="https://media.istockphoto.com/id/1498516775/photo/the-eiffel-tower-in-paris-france-at-sunset.jpg?s=612x612&w=0&k=20&c=V4StdESr6-QQWOjXm6R8b1T-_slWLxasMnN6SWdV9ko=" alt="Paris">
+                    <img src="https://media.istockphoto.com/id/1498516775/photo/the-eiffel-tower-in-paris-france-at-sunset.jpg?s=612x612&w=0&k=20&c=V4StdESr6-QQWOjXm6R8b1T-_slWLxasMnN6SWdV9ko="
+                        alt="Paris">
                     <div class="card-content">
                         <h3>Paris, France</h3>
                         <p>The city of love and lights</p>
@@ -63,7 +66,8 @@
                     </div>
                 </div>
                 <div class="destination-card">
-                    <img src="https://media.istockphoto.com/id/1390815938/photo/tokyo-city-in-japan.jpg?s=612x612&w=0&k=20&c=VHiC3TlbXkb-Yf6WUYjh825Y0nGMCTkNUa9j8X8rVfY=" alt="Tokyo">
+                    <img src="https://media.istockphoto.com/id/1390815938/photo/tokyo-city-in-japan.jpg?s=612x612&w=0&k=20&c=VHiC3TlbXkb-Yf6WUYjh825Y0nGMCTkNUa9j8X8rVfY="
+                        alt="Tokyo">
                     <div class="card-content">
                         <h3>Tokyo, Japan</h3>
                         <p>Where tradition meets modernity</p>
@@ -139,10 +143,10 @@
                         <span>123 Travel Street, Adventure City, Nagpur</span>
                     </div>
                 </div>
-                <form class="contact-form">
-                    <input type="text" placeholder="Your Name" required>
-                    <input type="email" placeholder="Your Email" required>
-                    <textarea placeholder="Your Message" rows="5" required></textarea>
+                <form id="contactForm" class="contact-form">
+                    <input type="text" id="name" placeholder="Your Name" required>
+                    <input type="email" id="email" placeholder="Your Email" required>
+                    <textarea id="message" placeholder="Your Message" rows="5" required></textarea>
                     <button type="submit">Send Message</button>
                 </form>
             </div>
@@ -202,19 +206,19 @@
             <span class="close" onclick="closeBookingModal()">&times;</span>
             <h2>Book Your Trip</h2>
             <form id="bookingForm">
-                <input type="text" id="bookingDestination" placeholder="Destination" readonly>
-                <input type="text" id="bookingName" placeholder="Full Name" required>
-                <input type="email" id="bookingEmail" placeholder="Email" required>
-                <input type="tel" id="bookingPhone" placeholder="Phone Number" required>
-                <input type="date" id="bookingDate" required>
-                <select id="bookingGuests" required>
+                <input type="text" id="destination" placeholder="Destination" readonly>
+                <input type="text" id="fullName" placeholder="Full Name" required>
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="tel" id="phone" placeholder="Phone Number" required>
+                <input type="date" id="travelDate" required>
+                <select id="guests" required>
                     <option value="">Number of Guests</option>
                     <option value="1">1 Guest</option>
                     <option value="2">2 Guests</option>
                     <option value="3">3 Guests</option>
                     <option value="4">4+ Guests</option>
                 </select>
-                <textarea id="bookingMessage" placeholder="Special Requirements" rows="3"></textarea>
+                <textarea id="specialRequirements" placeholder="Special Requirements" rows="3"></textarea>
                 <button type="submit">Confirm Booking</button>
             </form>
         </div>
@@ -222,4 +226,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>
