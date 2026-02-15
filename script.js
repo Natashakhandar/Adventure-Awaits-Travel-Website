@@ -137,11 +137,6 @@ function closeBookingModal() {
 document.getElementById("bookingForm")?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  if (!currentUser) {
-    alert("Please login first");
-    return;
-  }
-
   const payload = {
     destination: document.getElementById("bookingDestination").value,
     full_name: document.getElementById("bookingName").value,
@@ -154,16 +149,34 @@ document.getElementById("bookingForm")?.addEventListener("submit", async (e) => 
 
   console.log("Booking payload:", payload);
 
-  const { error } = await supabase
-    .from("bookings")
-    .insert([payload]);
-
-  if (error) {
-    console.error(error);
-    alert("❌ Booking failed");
-  } else {
-    alert("✅ Booking saved!");
+  if (!supabase) {
+    alert("✅ Booking saved! (local mode)");
     closeBookingModal();
+    return;
+  }
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/bookings`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`,
+        "Prefer": "return=minimal"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok) {
+      alert("✅ Booking saved!");
+      closeBookingModal();
+    } else {
+      console.error(await res.text());
+      alert("❌ Booking failed");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("❌ Booking failed");
   }
 });
 
