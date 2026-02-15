@@ -135,9 +135,9 @@ document.getElementById("contactForm")?.addEventListener("submit", async (e) => 
   e.preventDefault();
 
   const payload = {
-    name: name.value,
-    email: email.value,
-    message: message.value
+    name: document.getElementById("name").value.trim(),
+    email: document.getElementById("email").value.trim(),
+    message: document.getElementById("message").value.trim()
   };
 
   console.log("Sending contact:", payload);
@@ -155,7 +155,7 @@ document.getElementById("contactForm")?.addEventListener("submit", async (e) => 
 
   if (res.ok) {
     showNotification("✅ Message sent!", "success");
-    contactForm.reset();
+    document.getElementById("contactForm").reset();
   } else {
     console.error(await res.text());
     showNotification("❌ Failed to send message", "error");
