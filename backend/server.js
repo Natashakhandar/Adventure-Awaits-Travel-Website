@@ -1,49 +1,53 @@
-console.log("SUPABASE CONNECTED ✅");
+console.log("✅ SCRIPT LOADED");
 
 const SUPABASE_URL = "https://nwttotkdkxtlovioftyv.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im53dHRvdGtka3h0bG92aW9mdHl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEwNjM5ODMsImV4cCI6MjA4NjYzOTk4M30.RuZNwe_7W2uuBNH5oX5Hr3RzvP5RlQ99hjUUw7dk5x8";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im53dHRvdGtka3h0bG92aW9mdHl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEwNjM5ODMsImV4cCI6MjA4NjYzOTk4M30.RuZNwe_7W2uuBNH5oX5Hr3RzvP5RlQ99hjUUw7dk5x8"; // paste anon key
 
-/* ================= CONTACT ================= */
-
+/* ================= CONTACT FORM ================= */
 const contactForm = document.getElementById("contactForm");
 
 if (contactForm) {
   contactForm.addEventListener("submit", async (e) => {
     e.preventDefault();
+    console.log("📩 Contact submit clicked");
 
-    const data = {
-      name: document.getElementById("name").value,
-      email: document.getElementById("email").value,
-      message: document.getElementById("message").value
-    };
+    const name = document.querySelector("#contactForm #name").value;
+    const email = document.querySelector("#contactForm #email").value;
+    const message = document.querySelector("#contactForm #message").value;
 
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/contact_messages`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "apikey": SUPABASE_KEY,
-        "Authorization": `Bearer ${SUPABASE_KEY}`
-      },
-      body: JSON.stringify(data)
-    });
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/contact_messages`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          Prefer: "return=minimal"
+        },
+        body: JSON.stringify({ name, email, message })
+      });
 
-    if (res.ok) {
-      alert("✅ Message stored in DB");
-      contactForm.reset();
-    } else {
-      alert("❌ Insert failed");
-      console.error(await res.text());
+      console.log("CONTACT STATUS:", res.status);
+
+      if (res.ok) {
+        alert("✅ Message stored in DB");
+        contactForm.reset();
+      } else {
+        alert("❌ Error — check console");
+      }
+    } catch (err) {
+      console.error("CONTACT ERROR:", err);
     }
   });
 }
 
-/* ================= BOOKING ================= */
-
+/* ================= BOOKING FORM ================= */
 const bookingForm = document.getElementById("bookingForm");
 
 if (bookingForm) {
   bookingForm.addEventListener("submit", async (e) => {
     e.preventDefault();
+    console.log("📦 Booking submit clicked");
 
     const data = {
       destination: document.getElementById("destination").value,
@@ -55,22 +59,28 @@ if (bookingForm) {
       special_requirements: document.getElementById("specialRequirements").value
     };
 
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/bookings`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "apikey": SUPABASE_KEY,
-        "Authorization": `Bearer ${SUPABASE_KEY}`
-      },
-      body: JSON.stringify(data)
-    });
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/bookings`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          Prefer: "return=minimal"
+        },
+        body: JSON.stringify(data)
+      });
 
-    if (res.ok) {
-      alert("✅ Booking stored in DB");
-      bookingForm.reset();
-    } else {
-      alert("❌ Booking failed");
-      console.error(await res.text());
+      console.log("BOOKING STATUS:", res.status);
+
+      if (res.ok) {
+        alert("✅ Booking saved in DB");
+        bookingForm.reset();
+      } else {
+        alert("❌ Booking failed — check console");
+      }
+    } catch (err) {
+      console.error("BOOKING ERROR:", err);
     }
   });
 }
