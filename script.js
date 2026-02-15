@@ -121,13 +121,11 @@ document.getElementById("bookingForm")?.addEventListener("submit", async (e) => 
 
 document.getElementById("contactForm")?.addEventListener("submit", async (e) => {
   e.preventDefault();
-
-  const payload = {
-    name: document.getElementById("name").value,
-    email: document.getElementById("email").value,
-    message: document.getElementById("message").value
-  };
-
+const payload = {
+  name: document.getElementById("contactName").value,
+  email: document.getElementById("contactEmail").value,
+  message: document.getElementById("contactMessage").value
+};
   console.log("Contact payload:", payload);
 
   const res = await fetch(`${SUPABASE_URL}/rest/v1/contact_messages`, {
