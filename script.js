@@ -93,18 +93,17 @@ function closeBookingModal() {
 }
 
 /* ================= BOOKING SUBMIT ================= */
-
 document.getElementById("bookingForm")?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const data = {
-    destination: destination.value,
-    full_name: fullName.value,
-    email: bookingEmail.value,
-    phone: phone.value,
-    travel_date: travelDate.value,
-    guests: guests.value,
-    special_requirements: specialRequirements.value
+    destination: document.getElementById("destination").value,
+    full_name: document.getElementById("fullName").value,
+    email: document.getElementById("bookingEmail").value,
+    phone: document.getElementById("phone").value,
+    travel_date: document.getElementById("travelDate").value,
+    guests: document.getElementById("guests").value,
+    special_requirements: document.getElementById("specialRequirements").value
   };
 
   console.log("Sending booking:", data);
