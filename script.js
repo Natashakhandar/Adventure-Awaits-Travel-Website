@@ -1,112 +1,159 @@
-console.log("SUPABASE SCRIPT LOADED ✅");
+console.log("Script loaded");
 
-/* ================= SUPABASE CONFIG ================= */
+/* ================= CONFIG ================= */
 
 const SUPABASE_URL = "https://nwttotkdkxtlovioftyv.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im53dHRvdGtka3h0bG92aW9mdHl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEwNjM5ODMsImV4cCI6MjA4NjYzOTk4M30.RuZNwe_7W2uuBNH5oX5Hr3RzvP5RlQ99hjUUw7dk5x8";
 
-const supabase = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+/* ================= HAMBURGER MENU ================= */
 
-console.log("Supabase Ready 🚀");
-
-/* ================= GLOBAL ================= */
-
-const bookingModal = document.getElementById("bookingModal");
-const loginModal = document.getElementById("loginModal");
+function toggleMenu() {
+  var navMenu = document.querySelector(".nav-menu");
+  var hamburger = document.querySelector(".hamburger");
+  if (navMenu) navMenu.classList.toggle("active");
+  if (hamburger) hamburger.classList.toggle("active");
+}
 
 /* ================= MODALS ================= */
 
 function openLoginModal() {
-  if (loginModal) loginModal.style.display = "block";
+  var modal = document.getElementById("loginModal");
+  if (modal) modal.style.display = "block";
 }
 
 function closeLoginModal() {
-  if (loginModal) loginModal.style.display = "none";
+  var modal = document.getElementById("loginModal");
+  if (modal) modal.style.display = "none";
 }
 
-function openBookingModal(destination = "") {
-  if (bookingModal) bookingModal.style.display = "block";
-
-  const dest = document.getElementById("destination");
-  if (dest) dest.value = destination;
+function openBookingModal(destination) {
+  var modal = document.getElementById("bookingModal");
+  if (modal) modal.style.display = "block";
+  
+  var destInput = document.getElementById("bookingDestination");
+  if (destInput && destination) destInput.value = destination;
 }
 
 function closeBookingModal() {
-  if (bookingModal) bookingModal.style.display = "none";
+  var modal = document.getElementById("bookingModal");
+  if (modal) modal.style.display = "none";
 }
 
-/* ================= BOOKING FORM ================= */
+/* ================= LOGIN ================= */
 
-const bookingForm = document.getElementById("bookingForm");
+function handleLogin(e) {
+  e.preventDefault();
+  var email = document.getElementById("loginEmail").value;
+  var password = document.getElementById("loginPassword").value;
+  
+  if (email && password) {
+    alert("Login successful!");
+    closeLoginModal();
+  }
+}
 
+var loginForm = document.getElementById("loginForm");
+if (loginForm) {
+  loginForm.addEventListener("submit", handleLogin);
+}
+
+/* ================= BOOKING ================= */
+
+function handleBooking(e) {
+  e.preventDefault();
+  
+  var payload = {
+    destination: document.getElementById("bookingDestination") ? document.getElementById("bookingDestination").value : "",
+    full_name: document.getElementById("bookingName") ? document.getElementById("bookingName").value : "",
+    email: document.getElementById("bookingEmail") ? document.getElementById("bookingEmail").value : "",
+    phone: document.getElementById("bookingPhone") ? document.getElementById("bookingPhone").value : "",
+    travel_date: document.getElementById("bookingDate") ? document.getElementById("bookingDate").value : "",
+    guests: document.getElementById("bookingGuests") ? document.getElementById("bookingGuests").value : "",
+    special_requirements: document.getElementById("bookingMessage") ? document.getElementById("bookingMessage").value : ""
+  };
+
+  console.log("Booking:", payload);
+
+  fetch(SUPABASE_URL + "/rest/v1/bookings", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": SUPABASE_KEY,
+      "Authorization": "Bearer " + SUPABASE_KEY,
+      "Prefer": "return=minimal"
+    },
+    body: JSON.stringify(payload)
+  })
+  .then(function(res) {
+    if (res.ok) {
+      alert("Booking saved!");
+      closeBookingModal();
+      document.getElementById("bookingForm").reset();
+    } else {
+      alert("Booking failed");
+    }
+  })
+  .catch(function(err) {
+    console.error(err);
+    alert("Booking failed");
+  });
+}
+
+var bookingForm = document.getElementById("bookingForm");
 if (bookingForm) {
-  bookingForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  bookingForm.addEventListener("submit", handleBooking);
+}
 
-    const payload = {
-      destination: document.getElementById("destination").value,
-      full_name: document.getElementById("fullName").value,
-      email: document.getElementById("bookingEmail").value,
-      phone: document.getElementById("phone").value,
-      travel_date: document.getElementById("travelDate").value,
-      guests: document.getElementById("guests").value,
-      special_requirements: document.getElementById("specialRequirements").value
-    };
+/* ================= CONTACT ================= */
 
-    console.log("Sending booking:", payload);
+function handleContact(e) {
+  e.preventDefault();
+  
+  var payload = {
+    name: document.getElementById("contactName") ? document.getElementById("contactName").value : "",
+    email: document.getElementById("contactEmail") ? document.getElementById("contactEmail").value : "",
+    message: document.getElementById("contactMessage") ? document.getElementById("contactMessage").value : ""
+  };
 
-    const { error } = await supabase
-      .from("bookings")
-      .insert([payload]);
+  console.log("Contact:", payload);
 
-    if (error) {
-      console.error(error);
-      alert("❌ Booking failed");
-      return;
+  fetch(SUPABASE_URL + "/rest/v1/contact_messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": SUPABASE_KEY,
+      "Authorization": "Bearer " + SUPABASE_KEY,
+      "Prefer": "return=minimal"
+    },
+    body: JSON.stringify(payload)
+  })
+  .then(function(res) {
+    if (res.ok) {
+      alert("Message sent!");
+      document.getElementById("contactForm").reset();
+    } else {
+      alert("Failed to send message");
     }
-
-    alert("✅ Booking saved!");
-    closeBookingModal();
+  })
+  .catch(function(err) {
+    console.error(err);
+    alert("Failed to send message");
   });
 }
 
-/* ================= CONTACT FORM ================= */
-
-const contactForm = document.getElementById("contactForm");
-
+var contactForm = document.getElementById("contactForm");
 if (contactForm) {
-  contactForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const payload = {
-      name: document.getElementById("contactName").value,
-      email: document.getElementById("contactEmail").value,
-      message: document.getElementById("contactMessage").value
-    };
-
-    console.log("Sending contact:", payload);
-
-    const { error } = await supabase
-      .from("contact_messages")
-      .insert([payload]);
-
-    if (error) {
-      console.error(error);
-      alert("❌ Failed to send message");
-      return;
-    }
-
-    alert("✅ Message sent!");
-    contactForm.reset();
-  });
+  contactForm.addEventListener("submit", handleContact);
 }
 
-/* ================= CLOSE MODAL OUTSIDE CLICK ================= */
+/* ================= CLOSE MODAL ON OUTSIDE CLICK ================= */
 
-window.addEventListener("click", (e) => {
-  if (e.target === bookingModal) closeBookingModal();
+window.onclick = function(e) {
+  var loginModal = document.getElementById("loginModal");
+  var bookingModal = document.getElementById("bookingModal");
+  
   if (e.target === loginModal) closeLoginModal();
-});
+  if (e.target === bookingModal) closeBookingModal();
+};
+
+console.log("All ready!");
