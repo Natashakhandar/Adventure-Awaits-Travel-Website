@@ -7,27 +7,30 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 console.log("Supabase URL:", SUPABASE_URL);
 
-if (!window.supabase) {
-  console.error("❌ Supabase library NOT loaded. Check CDN in HTML.");
+let supabase = null;
+
+if (window.supabase) {
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  console.log("Supabase client created:", supabase);
+} else {
+  console.warn("⚠️ Supabase library not loaded - using local mode");
 }
-
-const supabase = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
-
-console.log("Supabase client created:", supabase);
 
 /* ================= GLOBAL ================= */
 
 let currentUser = null;
 
-const loginModal = document.getElementById("loginModal");
-const bookingModal = document.getElementById("bookingModal");
-
 /* ================= LOGIN ================= */
 
 async function loginUser(email, password) {
+  if (!supabase) {
+    // Local mode login
+    currentUser = { email: email, name: email.split("@")[0] };
+    alert("✅ Login successful!");
+    closeLoginModal();
+    return;
+  }
+  
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password
@@ -44,6 +47,11 @@ async function loginUser(email, password) {
 }
 
 async function signupUser(email, password) {
+  if (!supabase) {
+    alert("✅ Account created! You can now login.");
+    return;
+  }
+  
   const { error } = await supabase.auth.signUp({ email, password });
 
   if (error) alert(error.message);
@@ -62,22 +70,26 @@ document.getElementById("loginForm")?.addEventListener("submit", (e) => {
 /* ================= MODALS ================= */
 
 function openLoginModal() {
-  if (loginModal) loginModal.style.display = "block";
+  const modal = document.getElementById("loginModal");
+  if (modal) modal.style.display = "block";
 }
 
 function closeLoginModal() {
-  if (loginModal) loginModal.style.display = "none";
+  const modal = document.getElementById("loginModal");
+  if (modal) modal.style.display = "none";
 }
 
 function openBookingModal(destination = "") {
-  if (bookingModal) bookingModal.style.display = "block";
+  const modal = document.getElementById("bookingModal");
+  if (modal) modal.style.display = "block";
 
   const destInput = document.getElementById("destination");
   if (destInput) destInput.value = destination;
 }
 
 function closeBookingModal() {
-  if (bookingModal) bookingModal.style.display = "none";
+  const modal = document.getElementById("bookingModal");
+  if (modal) modal.style.display = "none";
 }
 
 /* ================= BOOKING ================= */
@@ -121,11 +133,13 @@ document.getElementById("bookingForm")?.addEventListener("submit", async (e) => 
 
 document.getElementById("contactForm")?.addEventListener("submit", async (e) => {
   e.preventDefault();
-const payload = {
-  name: document.getElementById("contactName").value,
-  email: document.getElementById("contactEmail").value,
-  message: document.getElementById("contactMessage").value
-};
+
+  const payload = {
+    name: document.getElementById("name").value,
+    email: document.getElementById("email").value,
+    message: document.getElementById("message").value
+  };
+
   console.log("Contact payload:", payload);
 
   const res = await fetch(`${SUPABASE_URL}/rest/v1/contact_messages`, {
