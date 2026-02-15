@@ -1,76 +1,147 @@
-console.log("✅ SCRIPT LOADED");
+require("dotenv").config();
+const express = require("express");
+const mysql = require("mysql2");
+const cors = require("cors");
 
-const SUPABASE_URL = "https://nwttotkdkxtlovioftyv.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im53dHRvdGtka3h0bG92aW9mdHl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEwNjM5ODMsImV4cCI6MjA4NjYzOTk4M30.RuZNwe_7W2uuBNH5oX5Hr3RzvP5RlQ99hjUUw7dk5x8";
+const app = express();
 
-/* ================= CONTACT FORM ================= */
-const contactForm = document.getElementById("contactForm");
+/* ================= MIDDLEWARE ================= */
+app.use(cors());
+app.use(express.json());
 
-if (contactForm) {
-  contactForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+/* ================= DATABASE CONNECTION ================= */
+const db = mysql.createConnection({
+  host: "127.0.0.1",
+  user: "root",
+  password: "",
+  database: "adventure_db",
+  port: 3306
+});
 
-    const name = document.querySelector("#contactForm #name").value;
-    const email = document.querySelector("#contactForm #email").value;
-    const message = document.querySelector("#contactForm #message").value;
+/* ================= CONNECT DATABASE ================= */
+db.connect((err) => {
+  if (err) {
+    console.error("❌ Database Connection Failed:", err);
+    return;
+  }
 
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/contact_messages`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        apikey: SUPABASE_KEY,
-        Authorization: `Bearer ${SUPABASE_KEY}`,
-        Prefer: "return=minimal"
-      },
-      body: JSON.stringify({ name, email, message })
+  console.log("✅ Connected to MySQL Server (XAMPP)");
+  console.log("📦 Using Database: adventure_db");
+
+  // Auto create tables if missing (SAFE)
+  db.query(`
+    CREATE TABLE IF NOT EXISTS bookings (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      destination VARCHAR(255),
+      full_name VARCHAR(255),
+      email VARCHAR(255),
+      phone VARCHAR(20),
+      travel_date DATE,
+      guests INT,
+      special_requirements TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  db.query(`
+    CREATE TABLE IF NOT EXISTS contact_messages (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(255),
+      email VARCHAR(255),
+      message TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+});
+
+/* ================= TEST ROUTE ================= */
+app.get("/", (req, res) => {
+  res.send("🚀 Backend is running & DB connected!");
+});
+
+/* ================= BOOKING API ================= */
+app.post("/api/book", (req, res) => {
+  const {
+    destination,
+    fullName,
+    email,
+    phone,
+    travelDate,
+    guests,
+    specialRequirements
+  } = req.body;
+
+  if (!destination || !fullName || !email || !phone || !travelDate || !guests) {
+    return res.status(400).json({
+      message: "❌ Missing required booking fields"
     });
+  }
 
-    console.log("CONTACT STATUS:", res.status);
+  const sql = `
+    INSERT INTO bookings
+    (destination, full_name, email, phone, travel_date, guests, special_requirements)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `;
 
-    if (res.ok) {
-      alert("✅ Message stored in database");
-      contactForm.reset();
-    } else {
-      alert("❌ Error sending message");
+  db.query(
+    sql,
+    [
+      destination,
+      fullName,
+      email,
+      phone,
+      travelDate,
+      guests,
+      specialRequirements || ""
+    ],
+    (err, result) => {
+      if (err) {
+        console.error("❌ Booking Insert Error:", err);
+        return res.status(500).json({
+          message: "Booking failed (DB error)"
+        });
+      }
+
+      console.log("📌 Booking Saved:", fullName, destination);
+      res.json({
+        message: "✅ Booking saved successfully!"
+      });
     }
-  });
-}
+  );
+});
 
-/* ================= BOOKING FORM ================= */
-const bookingForm = document.getElementById("bookingForm");
+/* ================= CONTACT API ================= */
+app.post("/api/contact", (req, res) => {
+  const { name, email, message } = req.body;
 
-if (bookingForm) {
-  bookingForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const data = {
-      destination: document.getElementById("destination").value,
-      full_name: document.getElementById("fullName").value,
-      email: document.getElementById("bookingEmail").value,
-      phone: document.getElementById("phone").value,
-      travel_date: document.getElementById("travelDate").value,
-      guests: document.getElementById("guests").value,
-      special_requirements: document.getElementById("specialRequirements").value
-    };
-
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/bookings`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        apikey: SUPABASE_KEY,
-        Authorization: `Bearer ${SUPABASE_KEY}`,
-        Prefer: "return=minimal"
-      },
-      body: JSON.stringify(data)
+  if (!name || !email || !message) {
+    return res.status(400).json({
+      message: "❌ All contact fields are required"
     });
+  }
 
-    console.log("BOOKING STATUS:", res.status);
+  const sql = `
+    INSERT INTO contact_messages (name, email, message)
+    VALUES (?, ?, ?)
+  `;
 
-    if (res.ok) {
-      alert("✅ Booking saved in database");
-      bookingForm.reset();
-    } else {
-      alert("❌ Booking failed");
+  db.query(sql, [name, email, message], (err, result) => {
+    if (err) {
+      console.error("❌ Contact Insert Error:", err);
+      return res.status(500).json({
+        message: "Message failed (DB error)"
+      });
     }
+
+    console.log("📩 Contact Saved:", name);
+    res.json({
+      message: "✅ Message saved successfully!"
+    });
   });
-}
+});
+
+/* ================= SERVER START ================= */
+const PORT = 5000;
+app.listen(PORT, () => {
+  console.log(`🚀 Backend running on http://localhost:${PORT}`);
+});
