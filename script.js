@@ -63,19 +63,18 @@ function handleBooking(e) {
   e.preventDefault();
 
   const payload = {
-    destination: document.getElementById("bookingDestination")?.value || "",
-    full_name: document.getElementById("bookingName")?.value || "",
+    destination: document.getElementById("destination")?.value || "",
+    full_name: document.getElementById("fullName")?.value || "",
     email: document.getElementById("bookingEmail")?.value || "",
-    phone: document.getElementById("bookingPhone")?.value || "",
-    travel_date: document.getElementById("bookingDate")?.value || "",
-    guests: document.getElementById("bookingGuests")?.value || "",
+    phone: document.getElementById("phone")?.value || "",
+    travel_date: document.getElementById("travelDate")?.value || "",
+    guests: document.getElementById("guests")?.value || "",
     special_requirements:
-      document.getElementById("bookingMessage")?.value || ""
+      document.getElementById("specialRequirements")?.value || ""
   };
 
-  console.log("Booking:", payload);
+  console.log("FINAL PAYLOAD 👉", payload);
 
-  // 1️⃣ Save to Supabase
   fetch(SUPABASE_URL + "/rest/v1/bookings", {
     method: "POST",
     headers: {
@@ -86,30 +85,24 @@ function handleBooking(e) {
     },
     body: JSON.stringify(payload)
   })
-    // 2️⃣ Trigger Lambda (SES email)
-    .then(() =>
-      fetch(
-        "https://uisq4xq155.execute-api.ap-south-1.amazonaws.com/default/sendBookingEmail",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        }
-      )
-    )
+    .then(res => {
+      if (!res.ok) throw new Error("Insert failed");
+      return fetch("https://uisq4xq155.execute-api.ap-south-1.amazonaws.com/default/sendBookingEmail", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+    })
     .then(() => {
       alert("✅ Booking saved & email sent!");
       closeBookingModal();
       document.getElementById("bookingForm").reset();
     })
-    .catch((err) => {
-      console.error(err);
-      alert("❌ Booking failed");
+    .catch(err => {
+      console.error("❌ ERROR:", err);
+      alert("Booking failed");
     });
 }
-
-const bookingForm = document.getElementById("bookingForm");
-if (bookingForm) bookingForm.addEventListener("submit", handleBooking);
 
 /* ================= CONTACT ================= */
 
